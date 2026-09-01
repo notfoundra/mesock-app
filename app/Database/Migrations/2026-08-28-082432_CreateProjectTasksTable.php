@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Codeigniter\Database\Migration;
+use CodeIgniter\Database\Migration;
 
 class CreateProjectTasksTable extends Migration
 {

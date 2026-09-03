@@ -21,8 +21,9 @@ class CreateUserProfilesTable extends Migration
             ],
 
             'team_id' => [
-                'type' => 'INT',
-                'unsigned' => true
+                'type'     => 'INT',
+                'unsigned' => true,
+                'null'     => true,   // tambahin ini
             ],
 
             'employee_id' => [

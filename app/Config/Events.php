@@ -35,7 +35,7 @@ Events::on('pre_system', static function (): void {
             ob_end_flush();
         }
 
-        ob_start(static fn ($buffer) => $buffer);
+        ob_start(static fn($buffer) => $buffer);
     }
 
     /*
@@ -44,6 +44,18 @@ Events::on('pre_system', static function (): void {
      * --------------------------------------------------------------------
      * If you delete, they will no longer be collected.
      */
+    Events::on('register', static function ($user): void {
+        $request = service('request');
+
+        $profileModel = new \App\Models\UserProfileModel();
+
+        $profileModel->insert([
+            'user_id'   => $user->id,
+            'team_id'   => $request->getPost('team_id') ?: null,
+            'fullname'  => $request->getPost('fullname') ?: $user->username,
+            'is_active' => true,
+        ]);
+    });
     if (CI_DEBUG && ! is_cli()) {
         Events::on('DBQuery', 'CodeIgniter\Debug\Toolbar\Collectors\Database::collect');
         service('toolbar')->respond();

@@ -32,15 +32,19 @@
 
                 <?php
                 $menu = [
-                    ['url' => 'dashboard',      'icon' => 'ni-tv-2',        'label' => 'Dashboard'],
-                    ['url' => 'projects',       'icon' => 'ni-folder-17',   'label' => 'Semua Project'],
-                    ['url' => 'planning',       'icon' => 'ni-calendar-grid-58', 'label' => 'Deadline & Planning'],
-                    ['url' => 'tasks',          'icon' => 'ni-check-bold',  'label' => 'Checklist Pekerjaan'],
-                    ['url' => 'evidence',       'icon' => 'ni-image',       'label' => 'Bukti Pekerjaan'],
-                    ['url' => 'master',         'icon' => 'ni-settings-gear-65', 'label' => 'Konfigurasi Sistem'],
-                    ['url' => 'users',          'icon' => 'ni-single-02',   'label' => 'User & Akses'],
-                    ['url' => 'activity-logs',  'icon' => 'ni-book-bookmark', 'label' => 'Audit Sistem'],
+                    ['url' => 'dashboard', 'icon' => 'ni-tv-2',       'label' => 'Dashboard'],
+                    ['url' => 'projects',  'icon' => 'ni-folder-17',  'label' => 'Semua Project'],
+                    ['url' => 'tasks',     'icon' => 'ni-check-bold', 'label' => 'Checklist Pekerjaan'],
                 ];
+
+                if (is_super_team()) {
+                    $menu[] = ['url' => 'planning',      'icon' => 'ni-calendar-grid-58',  'label' => 'Deadline & Planning'];
+                    $menu[] = ['url' => 'evidence',      'icon' => 'ni-image',             'label' => 'Bukti Pekerjaan'];
+                    $menu[] = ['url' => 'master',        'icon' => 'ni-settings-gear-65',  'label' => 'Konfigurasi Sistem'];
+                    $menu[] = ['url' => 'users',         'icon' => 'ni-single-02',         'label' => 'User & Akses'];
+                    $menu[] = ['url' => 'activity-logs', 'icon' => 'ni-book-bookmark',     'label' => 'Audit Sistem'];
+                }
+
                 $currentPath = trim(current_url(true)->getPath(), '/');
                 ?>
 
@@ -87,8 +91,10 @@
             </div>
         </nav>
         <!-- /TOPBAR -->
-
         <div class="container-fluid py-4">
+            <?php if (session()->getFlashdata('error')) : ?>
+                <div class="alert alert-danger text-white"><?= esc(session()->getFlashdata('error')) ?></div>
+            <?php endif; ?>
             <?= $this->renderSection('content') ?>
         </div>
 

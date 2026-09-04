@@ -7,16 +7,13 @@ $routes->get('/', 'Home::index');
 
 service('auth')->routes($routes);
 
-// Semua route di bawah ini wajib login (Shield session filter)
 $routes->group('', ['filter' => 'session'], static function ($routes) {
     $routes->get('dashboard', 'DashboardController::index');
+    $routes->post('dashboard/update-status', 'DashboardController::updateStatus');
+    $routes->post('dashboard/quick-create', 'DashboardController::quickCreate');
 
     $routes->group('projects', static function ($routes) {
         $routes->get('/', 'ProjectController::index');
-    });
-
-    $routes->group('planning', static function ($routes) {
-        $routes->get('/', 'PlanningController::index');
     });
 
     $routes->group('tasks', static function ($routes) {
@@ -34,11 +31,16 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
         $routes->post('daily/templates/(:num)/delete', 'DailyTaskController::templateDelete/$1');
     });
 
-    $routes->group('evidence', static function ($routes) {
+    // Menu di bawah ini cuma bisa diakses tim IE (super akses)
+    $routes->group('planning', ['filter' => 'teamaccess'], static function ($routes) {
+        $routes->get('/', 'PlanningController::index');
+    });
+
+    $routes->group('evidence', ['filter' => 'teamaccess'], static function ($routes) {
         $routes->get('/', 'EvidenceController::index');
     });
 
-    $routes->group('master', static function ($routes) {
+    $routes->group('master', ['filter' => 'teamaccess'], static function ($routes) {
         $routes->get('/', 'MasterDataController::index');
         $routes->get('(:segment)', 'MasterDataController::index/$1');
         $routes->get('(:segment)/create', 'MasterDataController::create/$1');
@@ -48,11 +50,13 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
         $routes->post('(:segment)/(:num)/delete', 'MasterDataController::delete/$1/$2');
     });
 
-    $routes->group('users', static function ($routes) {
+    $routes->group('users', ['filter' => 'teamaccess'], static function ($routes) {
         $routes->get('/', 'UserManagementController::index');
+        $routes->get('(:num)/edit', 'UserManagementController::edit/$1');
+        $routes->post('(:num)/update', 'UserManagementController::update/$1');
     });
 
-    $routes->group('activity-logs', static function ($routes) {
+    $routes->group('activity-logs', ['filter' => 'teamaccess'], static function ($routes) {
         $routes->get('/', 'ActivityLogController::index');
     });
 });

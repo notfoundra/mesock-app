@@ -13,6 +13,7 @@ class ProjectTaskModel extends Model
 
     protected $allowedFields = [
         'project_id',
+        'parent_id',
         'title',
         'description',
         'order_no',
@@ -54,5 +55,26 @@ class ProjectTaskModel extends Model
             'done_by' => null,
             'done_at' => null,
         ]);
+    }
+    public function getTree(int $projectId): array
+    {
+        $all      = $this->where('project_id', $projectId)->orderBy('order_no', 'ASC')->findAll();
+        $tree     = [];
+        $children = [];
+
+        foreach ($all as $task) {
+            if (empty($task['parent_id'])) {
+                $tree[$task['id']] = $task;
+                $tree[$task['id']]['subtasks'] = [];
+            } else {
+                $children[$task['parent_id']][] = $task;
+            }
+        }
+
+        foreach ($tree as $id => &$task) {
+            $task['subtasks'] = $children[$id] ?? [];
+        }
+
+        return array_values($tree);
     }
 }

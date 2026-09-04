@@ -41,7 +41,7 @@ class CreateEvidenceCategoriesTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->createTable('project_categories');
+        $this->forge->createTable('evidence_categories');
     }
 
     public function down()

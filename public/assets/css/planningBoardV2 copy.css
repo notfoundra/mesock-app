@@ -1,0 +1,588 @@
+/* ===============================
+   BASE
+================================ */
+body {
+    background: #f3f4f6;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .08);
+}
+
+.loading-spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner-content img {
+    max-width: 200px;
+    margin-top: 10px;
+}
+
+/* ===============================
+   TOOLBAR (APS STYLE)
+================================ */
+.toolbar-section {
+    background: #ffffff;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.toolbar-left i {
+    color: #2563eb;
+    font-size: 18px;
+}
+
+.toolbar-title {
+    font-size: 15px;
+}
+
+.toolbar-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.toolbar-filters select,
+.toolbar-filters input[type="date"] {
+    height: 36px;
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.toolbar-filters select:focus,
+.toolbar-filters input:focus {
+    outline: none;
+    border-color: #2563eb;
+    background: #ffffff;
+}
+
+.date-separator {
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.btn-icon {
+    height: 36px;
+    width: 36px;
+    border-radius: 8px;
+    border: none;
+    background: #e5e7eb;
+    color: #374151;
+    cursor: pointer;
+}
+
+.btn-icon:hover {
+    background: #d1d5db;
+}
+
+.btn-icon.dark {
+    background: #111827;
+    color: #fff;
+}
+
+.btn-icon.dark:hover {
+    background: #000;
+}
+
+.btn-apply {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ===============================
+   LEGEND
+================================ */
+.aps-legend {
+    display: flex;
+    gap: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 6px 0 12px;
+}
+
+.aps-legend i {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* ===============================
+   CALENDAR (Modern Gantt Chart Style)
+================================ */
+.board-wrapper {
+    height: calc(100vh - 260px);
+    min-height: 480px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.fc {
+    font-size: 12px;
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    color: #334155;
+}
+
+.fc-theme-standard td, .fc-theme-standard th {
+    border-color: #e2e8f0;
+}
+
+.fc-resource {
+    font-weight: 600;
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+/* Emphasize the border between resources and timeline */
+.fc-scrollgrid-section-body .fc-scrollgrid-sync-table td:first-child {
+    border-right: 2px solid #cbd5e1 !important;
+}
+
+/* Give resource names more breathing room (Taller rows) */
+.fc-datagrid-cell-cushion {
+    padding: 14px 16px !important;
+}
+
+.fc-timeline-slot {
+    background: #ffffff;
+}
+
+.fc-timeline-slot:hover {
+    background: #f1f5f9;
+}
+
+/* Striped Background for Non-Working Time (Weekends/Holidays) */
+.fc-day-sun,
+.fc-day-sat,
+.fc-bg-event.libur {
+    background: repeating-linear-gradient(
+        45deg,
+        #f1f5f9,
+        #f1f5f9 10px,
+        #ffffff 10px,
+        #ffffff 20px
+    ) !important;
+    opacity: 1 !important;
+}
+
+/* Today */
+.fc-day-today {
+    background: rgba(239, 246, 255, 0.5) !important;
+}
+
+/* Modern Gantt Event Bars */
+.fc-timeline-event-harness {
+    padding: 6px 0 !important;
+}
+
+.fc-event {
+    border: none !important;
+    border-radius: 6px !important; /* Slightly rounder for premium feel */
+    padding: 6px 8px !important;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    min-height: 28px;
+}
+
+.fc-event-main {
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.fc-event:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+    z-index: 5 !important;
+}
+
+/* Current time indicator */
+.fc-timeline-now-indicator-line {
+    border-color: #ef4444 !important;
+    border-width: 2px !important;
+}
+
+.fc-timeline-now-indicator-arrow {
+    border-top-color: #ef4444 !important;
+}
+
+/* Header styling */
+.fc-col-header-cell-cushion,
+.fc-timegrid-axis-cushion {
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 8px !important;
+}
+
+.fc-timeline-header-row {
+    background: #f8fafc;
+}
+
+/* ===============================
+   APS MODE
+================================ */
+body.aps-mode {
+    overflow: hidden;
+}
+
+.aps-mode .toolbar-section,
+.aps-mode .aps-legend {
+    display: none;
+}
+
+.aps-mode .board-wrapper {
+    height: 100vh !important;
+}
+
+.aps-compact .fc {
+    font-size: 11px;
+}
+
+.aps-compact .fc-event {
+    padding: 3px 4px !important;
+}
+
+/* ===============================
+   MODAL ADD PLANNING - TIDY
+================================ */
+.modal-add-plan .modal-body {
+    padding-top: 12px;
+}
+
+.modal-add-plan .section-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.modal-add-plan .section-card .card-body {
+    padding: 14px;
+}
+
+.modal-add-plan .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #6b7280;
+    margin-bottom: 10px;
+}
+
+.modal-add-plan .section-title::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+}
+
+.modal-add-plan .form-label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #4b5563;
+    margin-bottom: 6px;
+}
+
+.modal-add-plan .form-control,
+.modal-add-plan .form-select {
+    height: 38px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.modal-add-plan .planning-block {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.modal-add-plan .planning-block .card-body {
+    padding: 14px;
+}
+
+.modal-add-plan .planning-title {
+    font-weight: 700;
+    color: #111827;
+}
+
+.modal-add-plan .planning-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #e5e7eb;
+    margin-bottom: 12px;
+}
+
+.modal-add-plan .mesin-row {
+    padding: 10px 8px;
+    border: 1px dashed #e5e7eb;
+    border-radius: 10px;
+    background: #f9fafb;
+    margin-top: 10px;
+}
+
+.modal-add-plan .mesin-row label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 6px;
+}
+
+.modal-add-plan .split-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #f9fafb;
+    font-size: 12px;
+    color: #374151;
+    height: 38px;
+}
+
+/* ===============================
+   MODAL DETAIL PLANNING - TIDY
+================================ */
+.modal-detail-plan .modal-body {
+    padding: 16px;
+}
+
+.modal-detail-plan .nav-tabs {
+    border-bottom: 1px solid #e5e7eb;
+    gap: 6px;
+}
+
+.modal-detail-plan .nav-tabs .nav-link {
+    border-radius: 10px 10px 0 0;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 12px;
+}
+
+.modal-detail-plan .card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+}
+
+.modal-detail-plan .card-header {
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 14px;
+}
+
+.modal-detail-plan .card-body {
+    padding: 14px;
+}
+
+.modal-detail-plan h6 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.modal-detail-plan h5,
+.modal-detail-plan h4 {
+    margin-bottom: 0;
+    font-weight: 700;
+    color: #111827;
+}
+
+.modal-detail-plan label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 6px;
+}
+
+.modal-detail-plan .form-control {
+    height: 38px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.modal-detail-plan textarea.form-control {
+    height: auto;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.modal-detail-plan .progress {
+    height: 28px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #f3f4f6, #e5e7eb);
+    box-shadow: inset 0 2px 6px rgba(17, 24, 39, 0.08);
+    overflow: hidden;
+}
+
+.modal-detail-plan .progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    color: #fff;
+    background: #38bdf8; /* Default planned color */
+    box-shadow: none;
+    transition: width 300ms ease;
+}
+
+.modal-detail-plan .progress-bar.is-planned {
+    background: #38bdf8;
+}
+.modal-detail-plan .progress-bar.is-running {
+    background: #34d399;
+}
+.modal-detail-plan .progress-bar.is-delay {
+    background: #fb7185;
+}
+.modal-detail-plan .progress-bar.is-complete {
+    background: #94a3b8;
+}
+
+.modal-detail-plan #order_progress_label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* ================= EVENT BACKGROUND (MINIMALIST & CALM) ================= */
+
+.fc-event.fc-event-planned,
+.fc-event.fc-event-planned .fc-event-main {
+    background: #e0f2fe !important;
+    border: 1px solid #bae6fd !important;
+    color: #0369a1 !important;
+    box-shadow: none !important;
+}
+
+.fc-event.fc-event-delay,
+.fc-event.fc-event-delay .fc-event-main {
+    background: #ffe4e6 !important;
+    border: 1px solid #fecdd3 !important;
+    color: #be123c !important;
+    box-shadow: none !important;
+}
+
+.fc-event.fc-event-running,
+.fc-event.fc-event-running .fc-event-main {
+    background: #d1fae5 !important;
+    border: 1px solid #a7f3d0 !important;
+    color: #047857 !important;
+    box-shadow: none !important;
+}
+
+.fc-event.fc-event-complete,
+.fc-event.fc-event-complete .fc-event-main {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+    box-shadow: none !important;
+}
+
+/* ================= CHIP ================= */
+
+.fc-event .event-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    margin-top: 4px;
+    background: rgba(0, 0, 0, 0.05); /* Soft transparent dark background */
+    box-shadow: none;
+}
+
+.fc-event .event-chip.is-planned {
+    color: #0284c7;
+}
+.fc-event .event-chip.is-delay {
+    color: #e11d48;
+}
+.fc-event .event-chip.is-running {
+    color: #059669;
+}
+.fc-event .event-chip.is-complete {
+    color: #475569;
+}
+
+/* ================= BACKGROUND EVENT MC AVAIL ================= */
+.bg-mc-avail {
+    opacity: 1 !important; /* Force opacity to be visible */
+    background-color: transparent !important;
+    pointer-events: none; /* Let clicks pass through to empty cell */
+}
+
+.bg-mc-avail-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8; /* Subtle gray-blue text */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

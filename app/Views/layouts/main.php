@@ -8,11 +8,38 @@
 
     <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
     <link rel="icon" type="image/png" href="<?= base_url('assets/img/favicon.png') ?>">
+    <!--     Fonts and icons     -->
+    <link href="<?= base_url('assets/css/open_sans_family.css') ?>" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <link href="<?= base_url('assets/css/nucleo-icons.css') ?>" rel=" stylesheet" />
+    <link href="<?= base_url('assets/css/nucleo-svg.css') ?>" rel=" stylesheet" />
 
-    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"> -->
-    <link rel="stylesheet" href="<?= base_url('assets/css/nucleo-icons.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/nucleo-svg.css') ?>">
-    <link id="pagestyle" href="<?= base_url('assets/css/soft-ui-dashboard.min.css') ?>" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <script src="<?= base_url('assets/fa/js/fontawesome.min.js') ?>"></script>
+    <link href="<?= base_url('assets/fa/css/all.min.css') ?>" rel=" stylesheet" />
+
+    <link href="<?= base_url('assets/css/nucleo-svg.css') ?>" rel=" stylesheet" />
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
+    <link id="pagestyle" href="<?= base_url('assets/css/soft-ui-dashboard.css?v=1.0.7') ?>" rel="stylesheet" />
+    <!-- Nepcha Analytics (nepcha.com) -->
+    <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+    <script src="<?= base_url('assets/js/jquery/jquery-3.7.1.min.js') ?>" crossorigin="anonymous"></script>
+    <link href="<?= base_url('assets/css/dataTables.dataTables.css') ?>" rel="stylesheet">
+    <script src="<?= base_url('assets/js/dataTables.min.js') ?>"></script>
+
+
+    <link href="<?= base_url('assets/css/select2.min.css') ?>" rel="stylesheet" />
+    <link href="<?= base_url('assets/node_modules/sweetalert2/dist/sweetalert2.min.css') ?>" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet">
+
+    <!-- kalender -->
+    <link rel="stylesheet" href="<?= base_url('assets/calendar/fonts/icomoon/style.css') ?>">
+
+    <link href='<?= base_url('assets/calendar/fullcalendar/packages/core/main.css') ?>' rel='stylesheet' />
+    <link href='<?= base_url('assets/calendar/fullcalendar/packages/daygrid/main.css') ?>' rel='stylesheet' />
 
     <?= $this->renderSection('styles') ?>
 </head>

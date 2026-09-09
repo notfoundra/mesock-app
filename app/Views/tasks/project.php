@@ -49,6 +49,9 @@
                 <label class="form-check-label <?= $task['is_done'] ? 'text-decoration-line-through text-secondary' : '' ?>">
                     <?= esc($task['title']) ?>
                 </label>
+                <a href="<?= site_url('tasks/' . $task['id'] . '/detail') ?>" class="text-xs text-primary ms-2">
+                    <i class="ni ni-single-copy-04"></i> Detail
+                </a>
                 <form action="<?= site_url('tasks/' . $task['id'] . '/delete') ?>" method="post" class="d-inline float-end" onsubmit="return confirm('Hapus task ini?');">
                     <?= csrf_field() ?>
                     <button type="submit" class="btn btn-link text-danger btn-sm py-0"><i class="ni ni-fat-remove"></i></button>
@@ -64,6 +67,9 @@
                     <label class="form-check-label <?= $sub['is_done'] ? 'text-decoration-line-through text-secondary' : '' ?>">
                         <?= esc($sub['title']) ?>
                     </label>
+                    <a href="<?= site_url('tasks/' . $task['id'] . '/detail') ?>" class="text-xs text-primary ms-2">
+                        <i class="ni ni-single-copy-04"></i> Detail
+                    </a>
                     <form action="<?= site_url('tasks/' . $sub['id'] . '/delete') ?>" method="post" class="d-inline float-end" onsubmit="return confirm('Hapus subtask ini?');">
                         <?= csrf_field() ?>
                         <button type="submit" class="btn btn-link text-danger btn-sm py-0"><i class="ni ni-fat-remove"></i></button>

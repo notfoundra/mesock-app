@@ -77,4 +77,18 @@ class ProjectTaskModel extends Model
 
         return array_values($tree);
     }
+    public function recalculateProjectProgress(int $projectId): void
+    {
+        $total = $this->where('project_id', $projectId)->countAllResults();
+
+        if ($total === 0) {
+            return; // belum ada task, jangan ubah progress
+        }
+
+        $done = $this->where('project_id', $projectId)->where('is_done', 1)->countAllResults();
+
+        $progress = round(($done / $total) * 100, 2);
+
+        (new \App\Models\ProjectModel())->update($projectId, ['progress' => $progress]);
+    }
 }

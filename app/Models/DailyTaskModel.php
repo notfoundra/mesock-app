@@ -11,9 +11,7 @@ class DailyTaskModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useTimestamps    = false;
-
-    protected $allowedFields = ['template_id', 'team_id', 'title', 'task_date', 'is_done', 'done_by', 'done_at'];
-
+    protected $allowedFields = ['template_id', 'team_id', 'title', 'description', 'task_date', 'is_done', 'done_by', 'done_at'];
     protected $validationRules = [
         'template_id' => 'required|is_natural_no_zero',
         'team_id'     => 'required|is_natural_no_zero',
@@ -57,6 +55,7 @@ class DailyTaskModel extends Model
                 'template_id' => $template['id'],
                 'team_id'     => $template['team_id'],
                 'title'       => $template['title'],
+                'description' => $template['description'] ?? null,
                 'task_date'   => $date,
                 'is_done'     => false,
             ]);

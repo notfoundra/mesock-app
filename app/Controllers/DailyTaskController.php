@@ -6,6 +6,9 @@ use App\Models\DailyTaskModel;
 use App\Models\TaskTemplateModel;
 use App\Models\TeamModel;
 use App\Models\UserProfileModel;
+use App\Models\EvidenceCategoryModel;
+use App\Models\ProjectCommentModel;
+use App\Models\ProjectEvidenceModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class DailyTaskController extends BaseController
@@ -100,5 +103,91 @@ class DailyTaskController extends BaseController
         (new TaskTemplateModel())->delete($id);
 
         return redirect()->to('/tasks/daily/templates');
+    }
+    public function detail(int $id)
+    {
+        $dailyModel = new DailyTaskModel();
+        $task       = $dailyModel->find($id);
+
+        if (! $task) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+        return view('tasks/daily_detail', [
+            'title'      => 'Detail Task Harian - ' . $task['title'],
+            'task'       => $task,
+            'comments'   => (new ProjectCommentModel())->getByDailyTask($id),
+            'evidences'  => (new ProjectEvidenceModel())->getByDailyTask($id),
+            'categories' => (new EvidenceCategoryModel())->findAll(),
+        ]);
+    }
+
+    public function storeComment(int $id)
+    {
+        $dailyModel = new DailyTaskModel();
+        $task       = $dailyModel->find($id);
+
+        if (! $task) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        (new ProjectCommentModel())->insert([
+            'daily_task_id' => $id,
+            'user_id'       => auth()->id(),
+            'comment'       => service('request')->getPost('comment'),
+        ]);
+
+        return redirect()->to('/tasks/daily/' . $id . '/detail');
+    }
+
+    public function storeEvidence(int $id)
+    {
+        $dailyModel = new DailyTaskModel();
+        $task       = $dailyModel->find($id);
+
+        if (! $task) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $request = service('request');
+        $file    = $request->getFile('attachment');
+
+        if (! $file || ! $file->isValid() || $file->hasMoved()) {
+            session()->setFlashdata('error', 'File tidak valid.');
+            return redirect()->to('/tasks/daily/' . $taskId . '/detail');
+        }
+
+        if (! in_array($file->getClientMimeType(), allowed_attachment_mimes(), true)) {
+            session()->setFlashdata('error', 'Tipe file tidak didukung. Boleh gambar, PDF, Word, Excel, PowerPoint, atau ZIP.).');
+            return redirect()->to('/tasks/daily/' . $taskId . '/detail');
+        }
+
+        if ($file->getSize() > 10 * 1024 * 1024) {
+            session()->setFlashdata('error', 'Ukuran file maksimal 10MB.');
+            return redirect()->to('/tasks/daily/' . $taskId . '/detail');
+        }
+
+        $newName    = $file->getRandomName();
+        $uploadPath = FCPATH . 'uploads/evidence';
+
+        if (! is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        $file->move($uploadPath, $newName);
+
+        (new ProjectEvidenceModel())->insert([
+            'daily_task_id' => $id,
+            'category_id'   => $request->getPost('category_id'),
+            'file_name'     => $newName,
+            'original_name' => $file->getClientName(),
+            'mime_type'     => $file->getClientMimeType(),
+            'file_size'     => $file->getSize(),
+            'caption'       => $request->getPost('caption'),
+            'uploaded_by'   => auth()->id(),
+        ]);
+
+        session()->setFlashdata('success', 'Gambar berhasil diupload.');
+
+        return redirect()->to('/tasks/daily/' . $id . '/detail');
     }
 }

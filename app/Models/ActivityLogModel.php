@@ -52,4 +52,29 @@ class ActivityLogModel extends Model
             ->orderBy('created_at', 'DESC')
             ->findAll($limit);
     }
+    public function getFiltered(array $filters = [], int $perPage = 20)
+    {
+        $builder = $this->select('
+            activity_logs.*,
+            user_profiles.fullname,
+            projects.title as project_title, projects.project_code
+        ')
+            ->join('user_profiles', 'user_profiles.user_id = activity_logs.user_id', 'left')
+            ->join('projects', 'projects.id = activity_logs.project_id', 'left');
+
+        if (! empty($filters['project_id'])) {
+            $builder->where('activity_logs.project_id', $filters['project_id']);
+        }
+        if (! empty($filters['user_id'])) {
+            $builder->where('activity_logs.user_id', $filters['user_id']);
+        }
+        if (! empty($filters['date_from'])) {
+            $builder->where('DATE(activity_logs.created_at) >=', $filters['date_from']);
+        }
+        if (! empty($filters['date_to'])) {
+            $builder->where('DATE(activity_logs.created_at) <=', $filters['date_to']);
+        }
+
+        return $builder->orderBy('activity_logs.created_at', 'DESC')->paginate($perPage);
+    }
 }

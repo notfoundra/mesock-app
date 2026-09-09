@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= esc($title ?? 'Login') ?> | ProjectTrack</title>
+    <title><?= esc($title ?? 'Login') ?> | ME Socks Project</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('assets/css/nucleo-icons.css') ?>">
@@ -24,7 +24,7 @@
                         <div class="card z-index-0 fadeIn3 fadeInBottom mt-8">
                             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                                 <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                                    <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">ProjectTrack</h4>
+                                    <h4 class="text-white font-weight-bolder text-center mt-2 mb-0"> ME Socks Project</h4>
                                 </div>
                             </div>
                             <div class="card-body">

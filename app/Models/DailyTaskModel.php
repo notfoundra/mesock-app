@@ -65,4 +65,45 @@ class DailyTaskModel extends Model
 
         return $created;
     }
+    public function getByDateWithTeam(string $date, ?int $teamId = null): array
+    {
+        $builder = $this->select('daily_tasks.*, teams.name as team_name')
+            ->join('teams', 'teams.id = daily_tasks.team_id', 'left')
+            ->where('daily_tasks.task_date', $date);
+
+        if ($teamId) {
+            $builder->where('daily_tasks.team_id', $teamId);
+        }
+
+        return $builder->orderBy('teams.name', 'ASC')->orderBy('daily_tasks.id', 'ASC')->findAll();
+    }
+
+    public function getHistory(array $filters = [], int $perPage = 20)
+    {
+        $builder = $this->select('
+            daily_tasks.*,
+            teams.name as team_name,
+            user_profiles.fullname as done_by_name
+        ')
+            ->join('teams', 'teams.id = daily_tasks.team_id', 'left')
+            ->join('user_profiles', 'user_profiles.user_id = daily_tasks.done_by', 'left');
+
+        if (! empty($filters['team_id'])) {
+            $builder->where('daily_tasks.team_id', $filters['team_id']);
+        }
+        if (! empty($filters['date_from'])) {
+            $builder->where('daily_tasks.task_date >=', $filters['date_from']);
+        }
+        if (! empty($filters['date_to'])) {
+            $builder->where('daily_tasks.task_date <=', $filters['date_to']);
+        }
+        if (isset($filters['is_done']) && $filters['is_done'] !== '') {
+            $builder->where('daily_tasks.is_done', $filters['is_done']);
+        }
+        if (! empty($filters['keyword'])) {
+            $builder->like('daily_tasks.title', $filters['keyword']);
+        }
+
+        return $builder->orderBy('daily_tasks.task_date', 'DESC')->orderBy('daily_tasks.id', 'DESC')->paginate($perPage);
+    }
 }

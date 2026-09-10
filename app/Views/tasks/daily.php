@@ -40,16 +40,24 @@ $totalCount = count($tasks);
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h6 class="mb-0">Checklist Harian</h6>
-        <p class="text-sm text-secondary mb-0"><?= esc($tanggalLabel) ?></p>
+        <a href="<?= site_url('tasks/daily/history') ?>" class="btn btn-sm btn-outline-primary mb-0 me-1">
+            <i class="ni ni-collection me-1"></i> History
+        </a>
+        <a href="<?= site_url('tasks/daily/templates') ?>" class="btn btn-sm btn-outline-secondary mb-0">
+            <i class="ni ni-settings-gear-65 me-1"></i> Kelola Template
+        </a>
     </div>
-    <a href="<?= site_url('tasks/daily/templates') ?>" class="btn btn-sm btn-outline-secondary mb-0">
-        <i class="ni ni-settings-gear-65 me-1"></i> Kelola Template
-    </a>
 </div>
-
 <form method="get" class="d-flex align-items-center gap-2 mb-3">
     <input type="date" name="date" value="<?= esc($date) ?>" class="form-control w-auto" onchange="this.form.submit()">
+    <?php if ($isSuperTeam) : ?>
+        <select name="team_id" class="form-control w-auto" onchange="this.form.submit()">
+            <option value="">-- Semua Tim --</option>
+            <?php foreach ($teams as $team) : ?>
+                <option value="<?= $team['id'] ?>" <?= $selectedTeamId == $team['id'] ? 'selected' : '' ?>><?= esc($team['name']) ?></option>
+            <?php endforeach; ?>
+        </select>
+    <?php endif; ?>
     <a href="<?= site_url('tasks/daily') ?>" class="btn btn-sm btn-outline-primary mb-0">Hari Ini</a>
     <?php if ($totalCount > 0) : ?>
         <span class="text-sm text-secondary ms-auto"><?= $doneCount ?> / <?= $totalCount ?> selesai</span>
@@ -74,6 +82,9 @@ $totalCount = count($tasks);
                     </form>
                     <div>
                         <p class="mb-0 <?= $task['is_done'] ? 'text-decoration-line-through text-secondary' : 'text-dark' ?>">
+                            <?php if ($isSuperTeam) : ?>
+                                <span class="badge bg-gradient-secondary me-1"><?= esc($task['team_name'] ?? '-') ?></span>
+                            <?php endif; ?>
                             <?= esc($task['title']) ?>
                         </p>
                         <?php if (! empty($task['description'])) : ?>

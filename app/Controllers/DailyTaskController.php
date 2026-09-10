@@ -3,35 +3,71 @@
 namespace App\Controllers;
 
 use App\Models\DailyTaskModel;
-use App\Models\TaskTemplateModel;
-use App\Models\TeamModel;
-use App\Models\UserProfileModel;
 use App\Models\EvidenceCategoryModel;
 use App\Models\ProjectCommentModel;
 use App\Models\ProjectEvidenceModel;
+use App\Models\TaskTemplateModel;
+use App\Models\TeamModel;
+use App\Models\UserProfileModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class DailyTaskController extends BaseController
 {
     public function index()
     {
-        $date = service('request')->getGet('date') ?: date('Y-m-d');
+        $request = service('request');
+        $date    = $request->getGet('date') ?: date('Y-m-d');
 
         $dailyModel = new DailyTaskModel();
         $dailyModel->generateForDate($date); // safety net kalau cron belum jalan
 
         $profileModel = new UserProfileModel();
         $profile      = $profileModel->getByUserId(auth()->id());
-        $teamId       = $profile['team_id'] ?? null;
+        $myTeamId     = $profile['team_id'] ?? null;
 
-        $tasks = $teamId
-            ? $dailyModel->getByTeamAndDate((int) $teamId, $date)
-            : $dailyModel->where('task_date', $date)->findAll();
+        $isSuper = is_super_team();
+        $teamId  = $isSuper ? $request->getGet('team_id') : $myTeamId;
 
         return view('tasks/daily', [
-            'title' => 'Checklist Harian',
-            'date'  => $date,
-            'tasks' => $tasks,
+            'title'          => 'Checklist Harian',
+            'date'           => $date,
+            'tasks'          => $dailyModel->getByDateWithTeam($date, $teamId ?: null),
+            'isSuperTeam'    => $isSuper,
+            'teams'          => $isSuper ? (new TeamModel())->where('is_active', 1)->findAll() : [],
+            'selectedTeamId' => $teamId,
+        ]);
+    }
+    public function history()
+    {
+        $request = service('request');
+
+        $profileModel = new UserProfileModel();
+        $profile      = $profileModel->getByUserId(auth()->id());
+        $myTeamId     = $profile['team_id'] ?? null;
+
+        $isSuper = is_super_team();
+
+        $filters = [
+            'team_id'   => $isSuper ? $request->getGet('team_id') : $myTeamId,
+            'date_from' => $request->getGet('date_from'),
+            'date_to'   => $request->getGet('date_to'),
+            'is_done'   => $request->getGet('is_done'),
+            'keyword'   => $request->getGet('keyword'),
+        ];
+
+        $dailyModel = new DailyTaskModel();
+        $history    = $dailyModel->getHistory($filters, 20);
+
+        $commentCounts = (new ProjectCommentModel())->countByDailyTaskIds(array_column($history, 'id'));
+
+        return view('tasks/daily_history', [
+            'title'         => 'History Checklist Harian',
+            'history'       => $history,
+            'pager'         => $dailyModel->pager,
+            'filters'       => $filters,
+            'commentCounts' => $commentCounts,
+            'isSuperTeam'   => $isSuper,
+            'teams'         => (new TeamModel())->where('is_active', 1)->findAll(),
         ]);
     }
 

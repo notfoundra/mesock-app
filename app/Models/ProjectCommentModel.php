@@ -47,4 +47,22 @@ class ProjectCommentModel extends Model
             ->orderBy('created_at', 'ASC')
             ->findAll();
     }
+    public function countByDailyTaskIds(array $dailyTaskIds): array
+    {
+        if (empty($dailyTaskIds)) {
+            return [];
+        }
+
+        $rows = $this->select('daily_task_id, COUNT(*) as total')
+            ->whereIn('daily_task_id', $dailyTaskIds)
+            ->groupBy('daily_task_id')
+            ->findAll();
+
+        $counts = [];
+        foreach ($rows as $row) {
+            $counts[$row['daily_task_id']] = (int) $row['total'];
+        }
+
+        return $counts;
+    }
 }

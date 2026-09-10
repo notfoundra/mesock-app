@@ -46,6 +46,7 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
         $routes->get('daily/(:num)/detail', 'DailyTaskController::detail/$1');
         $routes->post('daily/(:num)/comment', 'DailyTaskController::storeComment/$1');
         $routes->post('daily/(:num)/evidence', 'DailyTaskController::storeEvidence/$1');
+        $routes->get('daily/history', 'DailyTaskController::history');
     });
 
     // Menu di bawah ini cuma bisa diakses tim IE (super akses)

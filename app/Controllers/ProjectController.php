@@ -344,24 +344,31 @@ class ProjectController extends BaseController
         $taskModel = new ProjectTaskModel();
         $tasks     = $taskModel->getTree($id);
 
-        $commentModel = new ProjectCommentModel();
-        $taskComments = [];
+        $commentModel  = new ProjectCommentModel();
+        $evidenceModel = new ProjectEvidenceModel();
+
+        $taskComments  = [];
+        $taskEvidences = [];
 
         foreach ($tasks as $t) {
-            $taskComments[$t['id']] = $commentModel->getByTask($t['id']);
+            $taskComments[$t['id']]  = $commentModel->getByTask($t['id']);
+            $taskEvidences[$t['id']] = $evidenceModel->getByTask($t['id']);
 
             foreach ($t['subtasks'] as $sub) {
-                $taskComments[$sub['id']] = $commentModel->getByTask($sub['id']);
+                $taskComments[$sub['id']]  = $commentModel->getByTask($sub['id']);
+                $taskEvidences[$sub['id']] = $evidenceModel->getByTask($sub['id']);
             }
         }
 
         $html = view('projects/pdf_report', [
-            'project'      => $project,
-            'milestones'   => $milestones,
-            'tasks'        => $tasks,
-            'taskComments' => $taskComments,
-            'members'      => (new ProjectMemberModel())->getMembers($id),
-            'generatedAt'  => date('d M Y H:i'),
+            'project'         => $project,
+            'milestones'      => $milestones,
+            'tasks'           => $tasks,
+            'taskComments'    => $taskComments,
+            'taskEvidences'   => $taskEvidences,
+            'generalComments' => $commentModel->getGeneralByProject($id), // baru
+            'members'         => (new ProjectMemberModel())->getMembers($id),
+            'generatedAt'     => date('d M Y H:i'),
         ]);
 
         $dompdf = new Dompdf();

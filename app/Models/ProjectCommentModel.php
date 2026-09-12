@@ -65,4 +65,14 @@ class ProjectCommentModel extends Model
 
         return $counts;
     }
+    public function getGeneralByProject(int $projectId): array
+    {
+        return $this->select('project_comments.*, user_profiles.fullname')
+            ->join('user_profiles', 'user_profiles.user_id = project_comments.user_id', 'left')
+            ->where('project_id', $projectId)
+            ->where('task_id', null)
+            ->where('daily_task_id', null)
+            ->orderBy('created_at', 'ASC')
+            ->findAll();
+    }
 }

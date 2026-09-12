@@ -132,6 +132,23 @@
             margin-bottom: 4px;
         }
 
+        .attachment-img {
+            width: 85px;
+            height: 65px;
+            object-fit: cover;
+            margin: 2px 6px 2px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .attachment-file {
+            font-size: 9.5px;
+            margin: 2px 0;
+        }
+
+        .attachment-file a {
+            color: #344767;
+        }
+
         .box {
             border: 1px solid #e9ecef;
             padding: 8px 10px;
@@ -208,7 +225,14 @@
         <div class="section-title">Kendala / Problem</div>
         <div class="box"><?= nl2br(esc($project['problems'])) ?></div>
     <?php endif; ?>
-
+    <?php if (! empty($generalComments)) : ?>
+        <div class="section-title">Keterangan / Catatan Project</div>
+        <?php foreach ($generalComments as $c) : ?>
+            <div class="comment" style="margin-left: 0; margin-bottom: 6px;">
+                &raquo; <?= esc($c['comment']) ?> <i>- <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?></i>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
     <?php if (! empty($milestones)) : ?>
         <div class="section-title">Timeline / Milestone</div>
         <?php foreach ($milestones as $ms) :
@@ -230,16 +254,48 @@
         <?php foreach ($tasks as $task) : ?>
             <div class="task-block">
                 <div class="task-title">[<?= $task['is_done'] ? 'X' : ' ' ?>] <?= esc($task['title']) ?></div>
+
                 <?php foreach ($taskComments[$task['id']] ?? [] as $c) : ?>
                     <div class="comment">&raquo; <?= esc($c['comment']) ?> <i>- <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?></i></div>
                 <?php endforeach; ?>
 
+                <?php if (! empty($taskEvidences[$task['id']])) : ?>
+                    <div style="margin: 4px 0 4px 18px;">
+                        <?php foreach ($taskEvidences[$task['id']] as $ev) : ?>
+                            <?php if (is_image_mime($ev['mime_type'])) : ?>
+                                <img class="attachment-img" src="<?= FCPATH . 'uploads/evidence/' . $ev['file_name'] ?>">
+                            <?php else : ?>
+                                <div class="attachment-file">
+                                    File: <a href="<?= base_url('uploads/evidence/' . $ev['file_name']) ?>"><?= esc($ev['original_name']) ?></a>
+                                    <span style="color:#8392AB;">(<?= format_file_size((int) $ev['file_size']) ?>)</span>
+                                </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
                 <?php foreach ($task['subtasks'] as $sub) : ?>
                     <div class="subtask">
                         <div class="task-title">[<?= $sub['is_done'] ? 'X' : ' ' ?>] <?= esc($sub['title']) ?></div>
+
                         <?php foreach ($taskComments[$sub['id']] ?? [] as $c) : ?>
                             <div class="comment">&raquo; <?= esc($c['comment']) ?> <i>- <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?></i></div>
                         <?php endforeach; ?>
+
+                        <?php if (! empty($taskEvidences[$sub['id']])) : ?>
+                            <div style="margin: 4px 0 4px 12px;">
+                                <?php foreach ($taskEvidences[$sub['id']] as $ev) : ?>
+                                    <?php if (is_image_mime($ev['mime_type'])) : ?>
+                                        <img class="attachment-img" src="<?= FCPATH . 'uploads/evidence/' . $ev['file_name'] ?>">
+                                    <?php else : ?>
+                                        <div class="attachment-file">
+                                            File: <a href="<?= base_url('uploads/evidence/' . $ev['file_name']) ?>"><?= esc($ev['original_name']) ?></a>
+                                            <span style="color:#8392AB;">(<?= format_file_size((int) $ev['file_size']) ?>)</span>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>

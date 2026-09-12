@@ -27,6 +27,7 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
         $routes->post('(:num)/milestone/(:num)/toggle', 'ProjectController::toggleMilestone/$1/$2');
         $routes->post('(:num)/milestone/(:num)/delete', 'ProjectController::deleteMilestone/$1/$2');
         $routes->get('(:num)/timeline', 'ProjectController::timeline/$1');
+        $routes->get('(:num)/export-pdf', 'ProjectController::exportPdf/$1');
     });
     $routes->group('tasks', static function ($routes) {
         $routes->get('/', 'TaskController::index');

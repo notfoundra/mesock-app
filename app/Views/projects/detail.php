@@ -19,6 +19,9 @@
         <a href="<?= site_url('tasks/project/' . $project['id']) ?>" class="btn btn-sm bg-gradient-info mb-0">Checklist</a>
         <a href="<?= site_url('projects/' . $project['id'] . '/timeline') ?>" class="btn btn-sm btn-outline-primary mb-0">Timeline</a>
         <a href="<?= site_url('projects/' . $project['id'] . '/edit') ?>" class="btn btn-sm btn-outline-secondary mb-0">Edit</a>
+        <a href="<?= site_url('projects/' . $project['id'] . '/export-pdf') ?>" target="_blank" class="btn btn-sm btn-outline-dark mb-0">
+            <i class="ni ni-single-copy-04 me-1"></i> Export PDF
+        </a>
     </div>
 </div>
 
@@ -30,6 +33,12 @@
             </div>
             <div class="card-body">
                 <p class="text-sm"><?= nl2br(esc($project['description'] ?: '-')) ?></p>
+                <?php if (! empty($project['goals'])) : ?>
+                    <p class="text-sm mb-1"><b>Goals:</b> <?= nl2br(esc($project['goals'])) ?></p>
+                <?php endif; ?>
+                <?php if (! empty($project['problems'])) : ?>
+                    <p class="text-sm mb-1"><b>Problem:</b> <?= nl2br(esc($project['problems'])) ?></p>
+                <?php endif; ?>
                 <div class="row text-sm">
                     <div class="col-6 mb-2"><b>Tim:</b> <?= esc($project['team_name'] ?? '-') ?></div>
                     <div class="col-6 mb-2"><b>Area:</b> <?= esc($project['area_name'] ?? '-') ?></div>

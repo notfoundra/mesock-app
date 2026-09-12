@@ -33,7 +33,14 @@
                 <label>Deskripsi</label>
                 <textarea name="description" class="form-control" rows="3"><?= old('description') ?? esc($row['description'] ?? '') ?></textarea>
             </div>
-
+            <div class="col-md-6">
+                <label>Goals / Tujuan</label>
+                <textarea name="goals" class="form-control" rows="2" placeholder="Apa target project ini?"><?= old('goals') ?? esc($row['goals'] ?? '') ?></textarea>
+            </div>
+            <div class="col-md-6">
+                <label>Kendala / Problem</label>
+                <textarea name="problems" class="form-control" rows="2" placeholder="Ada hambatan apa aja?"><?= old('problems') ?? esc($row['problems'] ?? '') ?></textarea>
+            </div>
             <div class="col-md-3">
                 <label>Tim</label>
                 <select name="team_id" class="form-control" required>

@@ -16,6 +16,8 @@ class ProjectModel extends Model
         'project_code',
         'title',
         'description',
+        'goals',
+        'problems',
         'team_id',
         'area_id',
         'category_id',

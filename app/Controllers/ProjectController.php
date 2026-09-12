@@ -14,6 +14,7 @@ use App\Models\ProjectStatusModel;
 use App\Models\TeamModel;
 use App\Models\UserProfileModel;
 use App\Models\ProjectMilestoneModel;
+use Dompdf\Dompdf;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class ProjectController extends BaseController
@@ -95,6 +96,8 @@ class ProjectController extends BaseController
             'category_id'  => $request->getPost('category_id'),
             'priority_id'  => $request->getPost('priority_id'),
             'status_id'    => $request->getPost('status_id'),
+            'goals'    => $request->getPost('goals'),
+            'problems' => $request->getPost('problems'),
             'start_date'   => $request->getPost('start_date') ?: null,
             'due_date'     => $request->getPost('due_date') ?: null,
             'created_by'   => auth()->id(),
@@ -143,6 +146,8 @@ class ProjectController extends BaseController
             'category_id'  => $request->getPost('category_id'),
             'priority_id'  => $request->getPost('priority_id'),
             'status_id'    => $request->getPost('status_id'),
+            'goals'    => $request->getPost('goals'),
+            'problems' => $request->getPost('problems'),
             'start_date'   => $request->getPost('start_date') ?: null,
             'due_date'     => $request->getPost('due_date') ?: null,
         ];
@@ -318,5 +323,56 @@ class ProjectController extends BaseController
         ]);
 
         return redirect()->to('/projects/' . $projectId);
+    }
+    public function exportPdf(int $id)
+    {
+        $projectModel = new ProjectModel();
+        $project      = $projectModel->withDetails()->where('projects.id', $id)->first();
+
+        if (! $project) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $milestoneModel = new ProjectMilestoneModel();
+        $milestones     = $milestoneModel->getByProject($id);
+
+        foreach ($milestones as $i => $ms) {
+            $milestones[$i]['is_overdue'] = $milestoneModel->isOverdue($ms);
+        }
+
+        $taskModel = new ProjectTaskModel();
+        $tasks     = $taskModel->getTree($id);
+
+        $commentModel = new ProjectCommentModel();
+        $taskComments = [];
+
+        foreach ($tasks as $t) {
+            $taskComments[$t['id']] = $commentModel->getByTask($t['id']);
+
+            foreach ($t['subtasks'] as $sub) {
+                $taskComments[$sub['id']] = $commentModel->getByTask($sub['id']);
+            }
+        }
+
+        $html = view('projects/pdf_report', [
+            'project'      => $project,
+            'milestones'   => $milestones,
+            'tasks'        => $tasks,
+            'taskComments' => $taskComments,
+            'members'      => (new ProjectMemberModel())->getMembers($id),
+            'generatedAt'  => date('d M Y H:i'),
+        ]);
+
+        $dompdf = new Dompdf();
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+
+        $filename = 'Laporan-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $project['project_code']) . '.pdf';
+
+        return $this->response
+            ->setContentType('application/pdf')
+            ->setBody($dompdf->output())
+            ->setHeader('Content-Disposition', 'inline; filename="' . $filename . '"');
     }
 }

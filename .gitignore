@@ -44,8 +44,10 @@ $RECYCLE.BIN/
 .env
 .vagrant
 Vagrantfile
-/uploads/*
-
+/public/uploads/*
+!/public/uploads/.gitkeep
+!/public/uploads/evidence/
+!/public/uploads/evidence/.gitkeep
 #-------------------------
 # Temporary Files
 #-------------------------

@@ -159,6 +159,7 @@ class DailyTaskController extends BaseController
 
     public function storeComment(int $id)
     {
+        $request      = service('request');
         $dailyModel = new DailyTaskModel();
         $task       = $dailyModel->find($id);
 

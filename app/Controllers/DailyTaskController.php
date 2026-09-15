@@ -169,7 +169,7 @@ class DailyTaskController extends BaseController
         (new ProjectCommentModel())->insert([
             'daily_task_id' => $id,
             'user_id'       => auth()->id(),
-            'comment'       => service('request')->getPost('comment'),
+            'comment' => clean_comment_html($request->getPost('comment')),
         ]);
 
         return redirect()->to('/tasks/daily/' . $id . '/detail');

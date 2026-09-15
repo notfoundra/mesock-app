@@ -16,6 +16,7 @@ class ProjectEvidenceModel extends Model
         'project_id',
         'task_id',
         'daily_task_id',
+        'meeting_id',
         'category_id',
         'file_name',
         'original_name',
@@ -111,5 +112,18 @@ class ProjectEvidenceModel extends Model
         }
 
         return $builder->orderBy('project_evidences.created_at', 'DESC')->paginate($perPage);
+    }
+    public function getByMeeting(int $meetingId): array
+    {
+        return $this->select('
+            project_evidences.*,
+            evidence_categories.name as category_name, evidence_categories.color as category_color,
+            user_profiles.fullname as uploader_name
+        ')
+            ->join('evidence_categories', 'evidence_categories.id = project_evidences.category_id', 'left')
+            ->join('user_profiles', 'user_profiles.user_id = project_evidences.uploaded_by', 'left')
+            ->where('meeting_id', $meetingId)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
     }
 }

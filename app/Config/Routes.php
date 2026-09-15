@@ -11,6 +11,7 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
     $routes->get('dashboard', 'DashboardController::index');
     $routes->post('dashboard/update-status', 'DashboardController::updateStatus');
     $routes->post('dashboard/quick-create', 'DashboardController::quickCreate');
+    $routes->post('comments/upload-image', 'CommentUploadController::upload');
 
     $routes->group('projects', static function ($routes) {
         $routes->get('/', 'ProjectController::index');
@@ -77,5 +78,16 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
 
     $routes->group('activity-logs', ['filter' => 'teamaccess'], static function ($routes) {
         $routes->get('/', 'ActivityLogController::index');
+    });
+    $routes->group('meetings', static function ($routes) {
+        $routes->get('/', 'MeetingController::index');
+        $routes->get('create', 'MeetingController::create');
+        $routes->post('store', 'MeetingController::store');
+        $routes->get('(:num)', 'MeetingController::detail/$1');
+        $routes->get('(:num)/edit', 'MeetingController::edit/$1');
+        $routes->post('(:num)/update', 'MeetingController::update/$1');
+        $routes->post('(:num)/delete', 'MeetingController::delete/$1');
+        $routes->post('(:num)/attachment', 'MeetingController::storeAttachment/$1');
+        $routes->get('(:num)/export-pdf', 'MeetingController::exportPdf/$1');
     });
 });

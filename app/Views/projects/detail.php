@@ -18,6 +18,7 @@
     <div>
         <a href="<?= site_url('tasks/project/' . $project['id']) ?>" class="btn btn-sm bg-gradient-info mb-0">Checklist</a>
         <a href="<?= site_url('projects/' . $project['id'] . '/timeline') ?>" class="btn btn-sm btn-outline-primary mb-0">Timeline</a>
+        <a href="<?= site_url('meetings?project_id=' . $project['id']) ?>" class="btn btn-sm btn-outline-info mb-0">Notulensi</a>
         <a href="<?= site_url('projects/' . $project['id'] . '/edit') ?>" class="btn btn-sm btn-outline-secondary mb-0">Edit</a>
         <a href="<?= site_url('projects/' . $project['id'] . '/export-pdf') ?>" target="_blank" class="btn btn-sm btn-outline-dark mb-0">
             <i class="ni ni-single-copy-04 me-1"></i> Export PDF
@@ -103,13 +104,13 @@
             <div class="card-body">
                 <form action="<?= site_url('projects/' . $project['id'] . '/comment') ?>" method="post" class="mb-3">
                     <?= csrf_field() ?>
-                    <textarea name="comment" class="form-control mb-2" rows="2" placeholder="Tulis komentar..." required></textarea>
+                    <textarea name="comment" id="commentEditor" class="form-control mb-2" rows="4" placeholder="Tulis komentar..."></textarea>
                     <button type="submit" class="btn btn-sm bg-gradient-primary mb-0">Kirim</button>
                 </form>
                 <?php foreach ($comments as $c) : ?>
                     <div class="mb-3">
                         <p class="text-sm font-weight-bold mb-0"><?= esc($c['fullname'] ?? 'User') ?></p>
-                        <p class="text-sm mb-0"><?= esc($c['comment']) ?></p>
+                        <div class="text-sm mb-0 comment-body"><?= $c['comment'] ?></div>
                         <p class="text-xs text-secondary mb-0"><?= date('d M Y H:i', strtotime($c['created_at'])) ?></p>
                     </div>
                 <?php endforeach; ?>
@@ -223,4 +224,41 @@
 
 
 </div>
+<?= $this->section('scripts') ?>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.ck-rich-editor, #commentEditor').forEach(function(textarea) {
+            if (textarea.ckeditorInstance) return; // biar nggak double-init
+
+            ClassicEditor
+                .create(textarea, {
+                    toolbar: [
+                        'heading', '|',
+                        'bold', 'italic', 'link', '|',
+                        'bulletedList', 'numberedList', '|',
+                        'outdent', 'indent', '|',
+                        'blockQuote', 'insertTable', '|',
+                        'undo', 'redo',
+                    ],
+                })
+                .then(function(editor) {
+                    textarea.ckeditorInstance = editor;
+                    const form = textarea.closest('form');
+                    if (form && !form.dataset.ckSubmitBound) {
+                        form.dataset.ckSubmitBound = '1';
+                        form.addEventListener('submit', function() {
+                            document.querySelectorAll('.ck-rich-editor, #commentEditor').forEach(function(ta) {
+                                if (ta.ckeditorInstance) ta.ckeditorInstance.updateSourceElement();
+                            });
+                        });
+                    }
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
+        });
+    });
+</script>
+<?= $this->endSection() ?>
 <?= $this->endSection() ?>

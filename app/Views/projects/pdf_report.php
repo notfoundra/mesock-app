@@ -161,6 +161,23 @@
             page-break-inside: avoid;
             margin-bottom: 10px;
         }
+
+        .comment-body img {
+            max-width: 150px;
+        }
+
+        .comment-body table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 4px 0;
+        }
+
+        .comment-body table td,
+        .comment-body table th {
+            border: 1px solid #ccc;
+            padding: 3px 5px;
+            font-size: 9px;
+        }
     </style>
 </head>
 
@@ -256,14 +273,21 @@
                 <div class="task-title">[<?= $task['is_done'] ? 'X' : ' ' ?>] <?= esc($task['title']) ?></div>
 
                 <?php foreach ($taskComments[$task['id']] ?? [] as $c) : ?>
-                    <div class="comment">&raquo; <?= esc($c['comment']) ?> <i>- <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?></i></div>
+                    <div class="comment">
+                        <i>&raquo; <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?>:</i>
+                        <div class="comment-body"><?= $c['comment'] ?></div>
+                    </div>
                 <?php endforeach; ?>
 
                 <?php if (! empty($taskEvidences[$task['id']])) : ?>
                     <div style="margin: 4px 0 4px 18px;">
                         <?php foreach ($taskEvidences[$task['id']] as $ev) : ?>
                             <?php if (is_image_mime($ev['mime_type'])) : ?>
-                                <img class="attachment-img" src="<?= FCPATH . 'uploads/evidence/' . $ev['file_name'] ?>">
+                                <?php
+                                $imgPath = str_replace('\\', '/', FCPATH . 'uploads/evidence/' . $ev['file_name']);
+                                $imgSrc  = 'file:///' . ltrim($imgPath, '/');
+                                ?>
+                                <img class="attachment-img" src="<?= $imgSrc ?>">
                             <?php else : ?>
                                 <div class="attachment-file">
                                     File: <a href="<?= base_url('uploads/evidence/' . $ev['file_name']) ?>"><?= esc($ev['original_name']) ?></a>
@@ -279,7 +303,10 @@
                         <div class="task-title">[<?= $sub['is_done'] ? 'X' : ' ' ?>] <?= esc($sub['title']) ?></div>
 
                         <?php foreach ($taskComments[$sub['id']] ?? [] as $c) : ?>
-                            <div class="comment">&raquo; <?= esc($c['comment']) ?> <i>- <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?></i></div>
+                            <div class="comment">
+                                <i>&raquo; <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?>:</i>
+                                <div class="comment-body"><?= $c['comment'] ?></div>
+                            </div>
                         <?php endforeach; ?>
 
                         <?php if (! empty($taskEvidences[$sub['id']])) : ?>

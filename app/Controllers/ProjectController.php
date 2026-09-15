@@ -320,7 +320,7 @@ class ProjectController extends BaseController
         (new ProjectCommentModel())->insert([
             'project_id' => $projectId,
             'user_id'    => auth()->id(),
-            'comment'    => service('request')->getPost('comment'),
+            'comment' => clean_comment_html($request->getPost('comment')),
         ]);
 
         return redirect()->to('/projects/' . $projectId);
@@ -371,7 +371,11 @@ class ProjectController extends BaseController
             'generatedAt'     => date('d M Y H:i'),
         ]);
 
-        $dompdf = new Dompdf();
+        $options = new \Dompdf\Options();
+        $options->set('isRemoteEnabled', true);
+        $options->set('chroot', FCPATH); // izinin Dompdf baca file di dalam folder public/
+
+        $dompdf = new Dompdf($options);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->loadHtml($html);
         $dompdf->render();

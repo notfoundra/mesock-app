@@ -125,7 +125,7 @@ class TaskController extends BaseController
             'project_id' => $task['project_id'],
             'task_id'    => $taskId,
             'user_id'    => auth()->id(),
-            'comment'    => $request->getPost('comment'),
+            'comment' => clean_comment_html($request->getPost('comment')),
         ]);
 
         return redirect()->to('/tasks/' . $taskId . '/detail');

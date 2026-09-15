@@ -40,7 +40,35 @@
 
     <link href='<?= base_url('assets/calendar/fullcalendar/packages/core/main.css') ?>' rel='stylesheet' />
     <link href='<?= base_url('assets/calendar/fullcalendar/packages/daygrid/main.css') ?>' rel='stylesheet' />
+    <style>
+        .comment-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 4px 0;
+        }
 
+        .comment-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 6px 0;
+        }
+
+        .comment-body table td,
+        .comment-body table th {
+            border: 1px solid #dee2e6;
+            padding: 4px 8px;
+            font-size: .8rem;
+        }
+
+        .comment-body p {
+            margin-bottom: .5rem;
+        }
+
+        .comment-body p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
     <?= $this->renderSection('styles') ?>
 </head>
 
@@ -62,6 +90,7 @@
                     ['url' => 'dashboard', 'icon' => 'ni-tv-2',       'label' => 'Dashboard'],
                     ['url' => 'projects',  'icon' => 'ni-folder-17',  'label' => 'Semua Project'],
                     ['url' => 'tasks',     'icon' => 'ni-check-bold', 'label' => 'Checklist Pekerjaan'],
+                    ['url' => 'meetings',  'icon' => 'ni-align-left-2', 'label' => 'Notulensi Meeting'], // baru
                 ];
 
                 if (is_super_team()) {

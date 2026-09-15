@@ -1,3 +1,9 @@
+<?php
+function local_file_uri(string $path): string
+{
+    return str_replace('\\', '/', $path);
+}
+?>
 <!DOCTYPE html>
 <html>
 

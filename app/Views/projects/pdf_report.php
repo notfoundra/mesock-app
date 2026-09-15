@@ -132,21 +132,54 @@
             margin-bottom: 4px;
         }
 
-        .attachment-img {
-            width: 85px;
-            height: 65px;
+        .attachment-grid {
+            margin-top: 6px;
+        }
+
+        .attachment-card {
+            display: inline-block;
+            width: 230px;
+            vertical-align: top;
+            margin: 0 14px 18px 0;
+        }
+
+        .attachment-card img {
+            width: 230px;
+            height: 175px;
             object-fit: cover;
-            margin: 2px 6px 2px 0;
-            border: 1px solid #e9ecef;
+            border: 1px solid #dfe3e8;
+            border-radius: 5px;
         }
 
-        .attachment-file {
+        .cat-badge {
+            display: inline-block;
+            font-size: 8px;
+            color: #fff;
+            padding: 2px 7px;
+            border-radius: 3px;
+            margin-top: 5px;
+            letter-spacing: .3px;
+        }
+
+        .attachment-caption {
+            font-size: 8.5px;
+            color: #555;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        .attachment-file-card {
+            display: block;
+            border: 1px solid #dfe3e8;
+            border-radius: 5px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+        }
+
+        .attachment-file-card a {
             font-size: 9.5px;
-            margin: 2px 0;
-        }
-
-        .attachment-file a {
             color: #344767;
+            font-weight: bold;
         }
 
         .box {
@@ -280,24 +313,37 @@
                 <?php endforeach; ?>
 
                 <?php if (! empty($taskEvidences[$task['id']])) : ?>
-                    <div style="margin: 4px 0 4px 18px;">
+                    <div class="attachment-grid" style="margin: 6px 0 6px 18px;">
                         <?php foreach ($taskEvidences[$task['id']] as $ev) : ?>
                             <?php if (is_image_mime($ev['mime_type'])) : ?>
-                                <?php
-                                $imgPath = str_replace('\\', '/', FCPATH . 'uploads/evidence/' . $ev['file_name']);
-                                $imgSrc  = 'file:///' . ltrim($imgPath, '/');
-                                ?>
-                                <img class="attachment-img" src="<?= $imgSrc ?>">
+                                <div class="attachment-card">
+                                    <img src="<?= local_file_uri(FCPATH . 'uploads/evidence/' . $ev['file_name']) ?>">
+                                    <div>
+                                        <span class="cat-badge" style="background-color: <?= esc($ev['category_color'] ?? '#8392AB') ?>;">
+                                            <?= esc($ev['category_name'] ?? 'Tanpa Kategori') ?>
+                                        </span>
+                                    </div>
+                                    <?php if (! empty($ev['caption'])) : ?>
+                                        <div class="attachment-caption"><?= esc($ev['caption']) ?></div>
+                                    <?php endif; ?>
+                                </div>
                             <?php else : ?>
-                                <div class="attachment-file">
-                                    File: <a href="<?= base_url('uploads/evidence/' . $ev['file_name']) ?>"><?= esc($ev['original_name']) ?></a>
-                                    <span style="color:#8392AB;">(<?= format_file_size((int) $ev['file_size']) ?>)</span>
+                                <div class="attachment-file-card">
+                                    <span class="cat-badge" style="background-color: <?= esc($ev['category_color'] ?? '#8392AB') ?>;">
+                                        <?= esc($ev['category_name'] ?? 'Tanpa Kategori') ?>
+                                    </span>
+                                    <div style="margin-top: 5px;">
+                                        <a href="<?= base_url('uploads/evidence/' . $ev['file_name']) ?>"><?= esc($ev['original_name']) ?></a>
+                                        <span style="color:#8392AB;font-size:9px;"> (<?= format_file_size((int) $ev['file_size']) ?>)</span>
+                                    </div>
+                                    <?php if (! empty($ev['caption'])) : ?>
+                                        <div class="attachment-caption"><?= esc($ev['caption']) ?></div>
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-
                 <?php foreach ($task['subtasks'] as $sub) : ?>
                     <div class="subtask">
                         <div class="task-title">[<?= $sub['is_done'] ? 'X' : ' ' ?>] <?= esc($sub['title']) ?></div>
@@ -310,14 +356,32 @@
                         <?php endforeach; ?>
 
                         <?php if (! empty($taskEvidences[$sub['id']])) : ?>
-                            <div style="margin: 4px 0 4px 12px;">
+                            <div class="attachment-grid" style="margin: 6px 0 6px 12px;">
                                 <?php foreach ($taskEvidences[$sub['id']] as $ev) : ?>
                                     <?php if (is_image_mime($ev['mime_type'])) : ?>
-                                        <img class="attachment-img" src="<?= FCPATH . 'uploads/evidence/' . $ev['file_name'] ?>">
+                                        <div class="attachment-card">
+                                            <img src="<?= local_file_uri(FCPATH . 'uploads/evidence/' . $ev['file_name']) ?>">
+                                            <div>
+                                                <span class="cat-badge" style="background-color: <?= esc($ev['category_color'] ?? '#8392AB') ?>;">
+                                                    <?= esc($ev['category_name'] ?? 'Tanpa Kategori') ?>
+                                                </span>
+                                            </div>
+                                            <?php if (! empty($ev['caption'])) : ?>
+                                                <div class="attachment-caption"><?= esc($ev['caption']) ?></div>
+                                            <?php endif; ?>
+                                        </div>
                                     <?php else : ?>
-                                        <div class="attachment-file">
-                                            File: <a href="<?= base_url('uploads/evidence/' . $ev['file_name']) ?>"><?= esc($ev['original_name']) ?></a>
-                                            <span style="color:#8392AB;">(<?= format_file_size((int) $ev['file_size']) ?>)</span>
+                                        <div class="attachment-file-card">
+                                            <span class="cat-badge" style="background-color: <?= esc($ev['category_color'] ?? '#8392AB') ?>;">
+                                                <?= esc($ev['category_name'] ?? 'Tanpa Kategori') ?>
+                                            </span>
+                                            <div style="margin-top: 5px;">
+                                                <a href="<?= base_url('uploads/evidence/' . $ev['file_name']) ?>"><?= esc($ev['original_name']) ?></a>
+                                                <span style="color:#8392AB;font-size:9px;"> (<?= format_file_size((int) $ev['file_size']) ?>)</span>
+                                            </div>
+                                            <?php if (! empty($ev['caption'])) : ?>
+                                                <div class="attachment-caption"><?= esc($ev['caption']) ?></div>
+                                            <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                 <?php endforeach; ?>

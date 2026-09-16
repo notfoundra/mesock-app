@@ -63,7 +63,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script src="<?= base_url('assets/js/ckeditor/ckeditor.js') ?>"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.ck-rich-editor, #commentEditor').forEach(function(textarea) {

@@ -10,6 +10,8 @@ use App\Models\TaskTemplateModel;
 use App\Models\TeamModel;
 use App\Models\UserProfileModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class DailyTaskController extends BaseController
 {
@@ -226,5 +228,62 @@ class DailyTaskController extends BaseController
         session()->setFlashdata('success', 'Gambar berhasil diupload.');
 
         return redirect()->to('/tasks/daily/' . $id . '/detail');
+    }
+    public function exportPdf()
+    {
+        $request = service('request');
+        $date    = $request->getGet('date') ?: date('Y-m-d');
+
+        $profileModel = new UserProfileModel();
+        $profile      = $profileModel->getByUserId(auth()->id());
+        $myTeamId     = $profile['team_id'] ?? null;
+
+        $isSuper = is_super_team();
+        $teamId  = $isSuper ? $request->getGet('team_id') : $myTeamId;
+
+        $dailyModel = new DailyTaskModel();
+        $tasks      = $dailyModel->getByDateWithTeam($date, $teamId ?: null);
+
+        $commentModel  = new ProjectCommentModel();
+        $evidenceModel = new ProjectEvidenceModel();
+
+        $taskComments  = [];
+        $taskEvidences = [];
+
+        foreach ($tasks as $t) {
+            $taskComments[$t['id']]  = $commentModel->getByDailyTask($t['id']);
+            $taskEvidences[$t['id']] = $evidenceModel->getByDailyTask($t['id']);
+        }
+
+        $teamName = null;
+        if ($teamId) {
+            $team     = (new TeamModel())->find($teamId);
+            $teamName = $team['name'] ?? null;
+        }
+
+        $html = view('tasks/daily_pdf_report', [
+            'date'          => $date,
+            'teamName'      => $teamName,
+            'tasks'         => $tasks,
+            'taskComments'  => $taskComments,
+            'taskEvidences' => $taskEvidences,
+            'generatedAt'   => date('d M Y H:i'),
+        ]);
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $options->set('chroot', realpath(FCPATH));
+
+        $dompdf = new Dompdf($options);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+
+        $filename = 'Checklist-Harian-' . ($teamName ? preg_replace('/[^A-Za-z0-9\-]/', '-', $teamName) . '-' : '') . $date . '.pdf';
+
+        return $this->response
+            ->setContentType('application/pdf')
+            ->setBody($dompdf->output())
+            ->setHeader('Content-Disposition', 'inline; filename="' . $filename . '"');
     }
 }

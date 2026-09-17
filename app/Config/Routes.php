@@ -49,6 +49,7 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
         $routes->post('daily/(:num)/comment', 'DailyTaskController::storeComment/$1');
         $routes->post('daily/(:num)/evidence', 'DailyTaskController::storeEvidence/$1');
         $routes->get('daily/history', 'DailyTaskController::history');
+        $routes->get('daily/export-pdf', 'DailyTaskController::exportPdf');
     });
 
     // Menu di bawah ini cuma bisa diakses tim IE (super akses)

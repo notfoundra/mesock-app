@@ -317,6 +317,7 @@ class ProjectController extends BaseController
     }
     public function storeComment(int $projectId)
     {
+        $request      = service('request');
         (new ProjectCommentModel())->insert([
             'project_id' => $projectId,
             'user_id'    => auth()->id(),

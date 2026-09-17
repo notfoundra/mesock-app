@@ -43,6 +43,9 @@ $totalCount = count($tasks);
         <a href="<?= site_url('tasks/daily/history') ?>" class="btn btn-sm btn-outline-primary mb-0 me-1">
             <i class="ni ni-collection me-1"></i> History
         </a>
+        <a href="<?= site_url('tasks/daily/export-pdf?date=' . $date . ($isSuperTeam && $selectedTeamId ? '&team_id=' . $selectedTeamId : '')) ?>" target="_blank" class="btn btn-sm btn-outline-dark mb-0 me-1">
+            <i class="ni ni-single-copy-04 me-1"></i> Export PDF
+        </a>
         <a href="<?= site_url('tasks/daily/templates') ?>" class="btn btn-sm btn-outline-secondary mb-0">
             <i class="ni ni-settings-gear-65 me-1"></i> Kelola Template
         </a>

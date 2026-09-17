@@ -285,7 +285,8 @@ function local_file_uri(string $path): string
         <div class="section-title">Keterangan / Catatan Project</div>
         <?php foreach ($generalComments as $c) : ?>
             <div class="comment" style="margin-left: 0; margin-bottom: 6px;">
-                &raquo; <?= esc($c['comment']) ?> <i>- <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?></i>
+                <i>&raquo; <?= esc($c['fullname'] ?? 'User') ?>, <?= date('d M Y', strtotime($c['created_at'])) ?>:</i>
+                <div class="comment-body"><?= $c['comment'] ?></div>
             </div>
         <?php endforeach; ?>
     <?php endif; ?>

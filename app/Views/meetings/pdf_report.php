@@ -158,6 +158,11 @@ function local_file_uri(string $path): string
             color: #344767;
             font-weight: bold;
         }
+
+        .comment-body,
+        .comment-body * {
+            color: #333 !important;
+        }
     </style>
 </head>
 

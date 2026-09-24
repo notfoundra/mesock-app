@@ -110,6 +110,11 @@ function local_file_uri(string $path): string
             font-size: 9px;
         }
 
+        .comment-body,
+        .comment-body * {
+            color: #333 !important;
+        }
+
         .attachment-grid {
             margin-top: 6px;
         }

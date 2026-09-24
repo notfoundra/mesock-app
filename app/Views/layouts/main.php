@@ -68,6 +68,11 @@
         .comment-body p:last-child {
             margin-bottom: 0;
         }
+
+        .comment-body,
+        .comment-body * {
+            color: #344767 !important;
+        }
     </style>
     <?= $this->renderSection('styles') ?>
 </head>

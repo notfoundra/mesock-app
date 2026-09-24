@@ -217,6 +217,11 @@ function local_file_uri(string $path): string
             padding: 3px 5px;
             font-size: 9px;
         }
+
+        .comment-body,
+        .comment-body * {
+            color: #333 !important;
+        }
     </style>
 </head>
 
